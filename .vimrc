@@ -74,6 +74,7 @@ else
 endif
 
 Plugin 'scrooloose/nerdtree'
+map <C-n> :NERDTreeToggle<CR>
 
 Plugin 'jistr/vim-nerdtree-tabs'
 
