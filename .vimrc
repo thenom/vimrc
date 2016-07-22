@@ -38,6 +38,11 @@ nnoremap <space> za
 
 "au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.erb set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.conf set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.yaml set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.pp set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
+
 
 Plugin 'vim-scripts/indentpython.vim'
 
@@ -88,4 +93,4 @@ Plugin 'tpope/vim-fugitive'
 
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
-
+set pastetoggle=<F2>
