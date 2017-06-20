@@ -9,13 +9,9 @@ call vundle#begin('~/.vim/bundle/')
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'bundle/Vundle.vim'
+Plugin 'Vundle/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
 filetype plugin indent on    " required
 
 set splitbelow
@@ -74,12 +70,6 @@ syntax on
 
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
-if has('gui_running')
-  set background=dark
-  colorscheme solarized
-else
-  colorscheme zenburn
-endif
 
 Plugin 'scrooloose/nerdtree'
 map <C-n> :NERDTreeToggle<CR>
@@ -102,3 +92,14 @@ let g:terraform_align=1
 Plugin 'robbles/logstash'
 
 set pastetoggle=<F2>
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+
+if has('gui_running')
+  set background=dark
+  colorscheme solarized
+else
+  colorscheme zenburn
+endif
