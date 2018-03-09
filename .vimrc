@@ -24,6 +24,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'hashivim/vim-terraform'
 Plugin 'robbles/logstash'
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -44,6 +45,11 @@ set foldlevel=99
 
 " Enable folding with the spacebar
 nnoremap <space> za
+
+" powerline
+set  rtp+=powerline/bindings/vim/
+set laststatus=2
+set t_Co=256
 
 set encoding=utf-8
 let python_highlight_all=1
