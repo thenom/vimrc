@@ -24,6 +24,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'hashivim/vim-terraform'
 Plugin 'robbles/logstash'
 Bundle 'Valloric/YouCompleteMe'
+Plugin 'farmergreg/vim-lastplace'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " All of your Plugins must be added before the following line
