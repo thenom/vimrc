@@ -14,7 +14,7 @@ Plugin 'Vundle/Vundle.vim'
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
@@ -26,9 +26,16 @@ Plugin 'robbles/logstash'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'farmergreg/vim-lastplace'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'tarekbecker/vim-yaml-formatter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
+
+" vim-plug plugins start
+call plug#begin('~/.vim/plugged')
+call plug#end()
+" end vim-plug plugins
+
 filetype plugin indent on    " required
 
 set splitbelow
@@ -48,7 +55,7 @@ set foldlevel=99
 nnoremap <space> za
 
 " powerline
-set  rtp+=powerline/bindings/vim/
+set rtp+=powerline/bindings/vim/
 set laststatus=2
 set t_Co=256
 
@@ -70,11 +77,19 @@ let g:terraform_align=1
 "standard vim config
 set pastetoggle=<F2>
 
+"autocmd's
 "au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.py,*.sh,*.tpl,*.erb,*.conf,*.json
 	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.yaml,*.yml,*.pp,*.tf,*.tfvars
 	\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.sh
+	\ set ft=sh
+au BufNewFile,BufRead *.json.tpl
+	\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
+au BufNewFile,BufRead *.groovy
+	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+au VimLeave *.tf !terraform validate ; read -n 1 -s
 
 highlight BadWhitespace ctermbg=red guibg=darkred
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
