@@ -1,45 +1,52 @@
-set nocompatible              " required
-filetype off                  " required
+" General config
+set nu						" turn on line number
+set nocompatible				" dont force vi compatibility
+filetype off					" enable file type detection
+set encoding=utf-8				" default to utf-8
+syntax on					" enable syntax highlighting
+set pastetoggle=<F2>				" use F2 to toggle code block pasting
+set ruler					" show column and line of current cursor position
+set pyxversion=3				" set default python version to use for pyx* commands
+let g:python_host_prog = "/usr/bin/python2"	" python 2 bin location
+let g:python3_host_prog = "/usr/bin/python3"	" python 3 bin location
 
+" check for python3, if succesful then python3 will be the loaded version
+if !has('python3')
+	echo "Warning! has('python3') failed its check!"
+endif
+
+" ---- Vundle setup (first! cd ~/.vim/bundle && git clone https://github.com/VundleVim/Vundle.vim.git)
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
-
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'Vundle/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
-"Plugin 'scrooloose/syntastic'
-Plugin 'nvie/vim-flake8'
-Plugin 'jnurmine/Zenburn'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'tpope/vim-fugitive'
-Plugin 'hashivim/vim-terraform'
-Plugin 'robbles/logstash'
-Bundle 'Valloric/YouCompleteMe'
-Plugin 'farmergreg/vim-lastplace'
+Plugin 'tmhedberg/SimpylFold'		" Fold\collapse your code blocks
+Plugin 'scrooloose/nerdtree'		" File manager and browser
+Plugin 'fatih/vim-go'			" Go tools and code completion
+Plugin 'majutsushi/tagbar'		" list file tags
+Plugin 'Shougo/deoplete.nvim'		" Autocompletion
+if !has('nvim')
+  Plugin 'roxma/nvim-yarp'		" deoplete dependancies
+  Plugin 'roxma/vim-hug-neovim-rpc'	" deoplete dependancies
+endif
+
+Plugin 'Shougo/neosnippet.vim'		" code snippet tools
+Plugin 'Shougo/neosnippet-snippets'	" code snippets
+
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plugin 'tarekbecker/vim-yaml-formatter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-
-" vim-plug plugins start
-call plug#begin('~/.vim/plugged')
-call plug#end()
-" end vim-plug plugins
-
 filetype plugin indent on    " required
+" ---- End Vundle setup
 
-set splitbelow
-set splitright
+" deoplete config
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })   " go configuration
 
 "split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -47,61 +54,14 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" Enable folding
-set foldmethod=indent
-set foldlevel=99
-
-" Enable folding with the spacebar
-nnoremap <space> za
-
-" powerline
-set rtp+=powerline/bindings/vim/
+" powerline config
+set  rtp+=powerline/bindings/vim/
 set laststatus=2
 set t_Co=256
 
-set encoding=utf-8
-let python_highlight_all=1
-syntax on
-
-"nerdtree
+" nerdtree config
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
-"turn on line numbers
-set nu
-
-"terraform plugin
-let g:terraform_align=1
-"let g:terraform_fmt_on_save=1
-
-"standard vim config
-set pastetoggle=<F2>
-
-"autocmd's
-"au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.py,*.sh,*.tpl,*.erb,*.conf,*.json
-	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.yaml,*.yml,*.pp,*.tf,*.tfvars
-	\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.sh
-	\ set ft=sh
-au BufNewFile,BufRead *.json.tpl
-	\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
-au BufNewFile,BufRead *.groovy
-	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
-au VimLeave *.tf !terraform validate ; read -n 1 -s
-
-highlight BadWhitespace ctermbg=red guibg=darkred
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-
-if has('gui_running')
-  set background=dark
-  colorscheme solarized
-else
-  colorscheme zenburn
-endif
-
-"toggle bg
-call togglebg#map("<F5>")
-
-set ruler
+" toggle tag bar
+nmap <F8> :TagbarToggle<CR>
