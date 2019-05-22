@@ -10,6 +10,12 @@ set pyxversion=3				" set default python version to use for pyx* commands
 let g:python_host_prog = "/usr/bin/python2"	" python 2 bin location
 let g:python3_host_prog = "/usr/bin/python3"	" python 3 bin location
 
+" --- split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 " check for python3, if succesful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
@@ -44,24 +50,38 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " ---- End Vundle setup
 
-" deoplete config
+" --- deoplete config
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })   " go configuration
 
-"split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" --- neosnippet config
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-" powerline config
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+" --- powerline config
 set  rtp+=powerline/bindings/vim/
 set laststatus=2
 set t_Co=256
 
-" nerdtree config
+" --- nerdtree config
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
-" toggle tag bar
+" --- toggle tag bar
 nmap <F8> :TagbarToggle<CR>
