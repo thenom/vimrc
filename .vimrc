@@ -16,7 +16,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" check for python3, if succesful then python3 will be the loaded version
+" check for python3, if succesful then python3 will be the loaded version.  ! Requires 'pip3 install --user pynvim' and python3 support (vim --version)
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
 endif
