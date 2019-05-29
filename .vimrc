@@ -7,8 +7,8 @@ syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
 set ruler					" show column and line of current cursor position
 set pyxversion=3				" set default python version to use for pyx* commands
-let g:python_host_prog = "/usr/bin/python2"	" python 2 bin location
-let g:python3_host_prog = "/usr/bin/python3"	" python 3 bin location
+let g:python_host_prog = "/usr/local/bin/python2"	" python 2 bin location
+let g:python3_host_prog = "/usr/local/bin/python3"	" python 3 bin location
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -16,7 +16,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" check for python3, if succesful then python3 will be the loaded version.  ! Requires 'pip3 install --user pynvim' and python3 support (vim --version)
+" check for python3, if succesful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
 endif
@@ -36,8 +36,8 @@ Plugin 'fatih/vim-go'			" Go tools and code completion
 Plugin 'majutsushi/tagbar'		" list file tags
 Plugin 'Shougo/deoplete.nvim'		" Autocompletion
 if !has('nvim')
-  Plugin 'roxma/nvim-yarp'		" deoplete dependancies
-  Plugin 'roxma/vim-hug-neovim-rpc'	" deoplete dependancies
+	Plugin 'roxma/nvim-yarp'		" deoplete dependancies
+	Plugin 'roxma/vim-hug-neovim-rpc'	" deoplete dependancies
 endif
 
 Plugin 'Shougo/neosnippet.vim'		" code snippet tools
@@ -67,11 +67,11 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " \ neosnippet#expandable_or_jumpable() ?
 " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+	set conceallevel=2 concealcursor=niv
 endif
 
 " --- powerline config
@@ -82,6 +82,8 @@ set t_Co=256
 " --- nerdtree config
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  "close vim if nerdtree is the last window
+
 
 " --- toggle tag bar
 nmap <F8> :TagbarToggle<CR>
