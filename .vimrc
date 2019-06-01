@@ -43,6 +43,7 @@ endif
 Plugin 'Shougo/neosnippet.vim'		" code snippet tools
 Plugin 'Shougo/neosnippet-snippets'	" code snippets
 
+Plugin 'hashivim/vim-terraform'         " terraform subcommands and filetype setups
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " All of your Plugins must be added before the following line
@@ -84,6 +85,11 @@ map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  "close vim if nerdtree is the last window
 
-
 " --- toggle tag bar
 nmap <F8> :TagbarToggle<CR>
+let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew version of vim
+
+" --- terraform config
+let g:terraform_align=1            " indentation syntax for matching files
+let g:terraform_fold_sections=1    " automatically fold (hide until unfolded) sections of terraform code
+let g:terraform_fmt_on_save=1      " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
