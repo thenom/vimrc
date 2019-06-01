@@ -2,6 +2,7 @@
 set nu						" turn on line number
 set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
+filetype plugin indent on			" enable loading the indent file for specific file types
 set encoding=utf-8				" default to utf-8
 syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
