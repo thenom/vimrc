@@ -2,7 +2,6 @@
 set nu						" turn on line number
 set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
-filetype plugin indent on			" enable loading the indent file for specific file types
 set encoding=utf-8				" default to utf-8
 syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
@@ -10,6 +9,8 @@ set ruler					" show column and line of current cursor position
 set pyxversion=3				" set default python version to use for pyx* commands
 let g:python_host_prog = "/usr/local/bin/python2"	" python 2 bin location
 let g:python3_host_prog = "/usr/local/bin/python3"	" python 3 bin location
+set splitbelow                                  " open horizontal split below
+set splitright                                  " open vertical split on the right
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -51,6 +52,9 @@ Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 call vundle#end()            " required
 filetype plugin indent on    " required
 " ---- End Vundle setup
+
+" --- Post vundle config
+filetype plugin indent on			" enable loading the indent file for specific file types
 
 " --- deoplete config
 let g:deoplete#enable_at_startup = 1
