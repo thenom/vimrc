@@ -7,8 +7,6 @@ syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
 set ruler					" show column and line of current cursor position
 set pyxversion=3				" set default python version to use for pyx* commands
-let g:python_host_prog = "/usr/local/bin/python2"	" python 2 bin location
-let g:python3_host_prog = "/usr/local/bin/python3"	" python 3 bin location
 set splitbelow                                  " open horizontal split below
 set splitright                                  " open vertical split on the right
 
@@ -98,3 +96,7 @@ let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew v
 let g:terraform_align=1            " indentation syntax for matching files
 let g:terraform_fold_sections=1    " automatically fold (hide until unfolded) sections of terraform code
 let g:terraform_fmt_on_save=1      " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
+
+" --- custom file types
+au BufNewFile,BufRead jenkinsfile,Jenkinsfile
+	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
