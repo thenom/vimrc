@@ -2,6 +2,7 @@
 set nu						" turn on line number
 set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
+filetype plugin indent on                       " enable file type detection
 set encoding=utf-8				" default to utf-8
 syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
@@ -43,7 +44,11 @@ endif
 Plugin 'Shougo/neosnippet.vim'		" code snippet tools
 Plugin 'Shougo/neosnippet-snippets'	" code snippets
 
-Plugin 'hashivim/vim-terraform'         " terraform subcommands and filetype setups
+Plugin 'hashivim/vim-terraform'                " terraform subcommands and filetype setups
+Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
+
+Plugin 'vim-syntastic/syntastic'  " Syntax checker
+
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " All of your Plugins must be added before the following line
@@ -57,6 +62,12 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 " --- deoplete config
 let g:deoplete#enable_at_startup = 1
 call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })   " go configuration
+let g:deoplete#omni_patterns = {}                                         " configuration for terraform autocomplete
+call deoplete#custom#option('omni_patterns', {
+\ 'complete_method': 'omnifunc',
+\ 'terraform': '[^ *\t"{=$]\w*',
+\})                                                                       " configuration for terraform autocomplete
+call deoplete#initialize()                                                " configuration for terraform autocomplete
 
 " --- neosnippet config
 " Plugin key-mappings.
@@ -92,11 +103,30 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nmap <F8> :TagbarToggle<CR>
 let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew version of vim
 
-" --- terraform config
+" --- vim-terraform config
 let g:terraform_align=1            " indentation syntax for matching files
 let g:terraform_fold_sections=1    " automatically fold (hide until unfolded) sections of terraform code
 let g:terraform_fmt_on_save=1      " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
 
+" --- vim-terraform-autocompletion
+let g:syntastic_terraform_tffilter_plan = 1              " (Optional) Enable terraform plan to be include in filter
+"set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
+"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(Preview) window after completions
+"autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
+let g:terraform_completion_keys = 1                      " (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
+
+" --- Syntastic config
+set statusline+=%#warningmsg#                  " recomended defaults
+set statusline+=%{SyntasticStatuslineFlag()}   " recomended defaults
+set statusline+=%*   " recomended defaults
+
+let g:syntastic_always_populate_loc_list = 1   " recomended defaults
+let g:syntastic_auto_loc_list = 1              " recomended defaults
+let g:syntastic_check_on_open = 1              " recomended defaults
+let g:syntastic_check_on_wq = 0                " recomended defaults
+
 " --- custom file types
+au BufNewFile,BufRead *.tf,*.tfvars
+        \ set ft=terraform expandtab
 au BufNewFile,BufRead jenkinsfile,Jenkinsfile
 	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
