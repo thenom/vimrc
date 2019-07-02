@@ -10,6 +10,7 @@ set ruler					" show column and line of current cursor position
 set pyxversion=3				" set default python version to use for pyx* commands
 set splitbelow                                  " open horizontal split below
 set splitright                                  " open vertical split on the right
+set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -51,6 +52,9 @@ Plugin 'vim-syntastic/syntastic'  " Syntax checker
 
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
+Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
+Plugin 'nvie/vim-flake8'                 " apply pep8 to python
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -61,13 +65,10 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 
 " --- deoplete config
 let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })   " go configuration
-let g:deoplete#omni_patterns = {}                                         " configuration for terraform autocomplete
-call deoplete#custom#option('omni_patterns', {
-\ 'complete_method': 'omnifunc',
-\ 'terraform': '[^ *\t"{=$]\w*',
-\})                                                                       " configuration for terraform autocomplete
-call deoplete#initialize()                                                " configuration for terraform autocomplete
+let g:deoplete#omni_patterns = {}                                               " configuration for terraform autocomplete
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })         " go configuration
+"call deoplete#custom#option('omni_patterns', { 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
+call deoplete#initialize()                                                      " configuration for terraform autocomplete
 
 " --- neosnippet config
 " Plugin key-mappings.
@@ -81,8 +82,8 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " \ pumvisible() ? "\<C-n>" :
 " \ neosnippet#expandable_or_jumpable() ?
 " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " For conceal markers.
 if has('conceal')
@@ -90,7 +91,7 @@ if has('conceal')
 endif
 
 " --- powerline config
-set  rtp+=powerline/bindings/vim/
+set rtp+=powerline/bindings/vim/
 set laststatus=2
 set t_Co=256
 
@@ -104,16 +105,18 @@ nmap <F8> :TagbarToggle<CR>
 let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew version of vim
 
 " --- vim-terraform config
-let g:terraform_align=1            " indentation syntax for matching files
-let g:terraform_fold_sections=1    " automatically fold (hide until unfolded) sections of terraform code
-let g:terraform_fmt_on_save=1      " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
+let g:terraform_align=1              " indentation syntax for matching files
+let g:terraform_fold_sections=1      " automatically fold (hide until unfolded) sections of terraform code
+let g:terraform_fmt_on_save=1        " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
+let g:terraform_commentstring='//%s' " Override vims comment string
 
 " --- vim-terraform-autocompletion
 let g:syntastic_terraform_tffilter_plan = 1              " (Optional) Enable terraform plan to be include in filter
-"set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
-"autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(Preview) window after completions
-"autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
+set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(Preview) window after completions
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
 let g:terraform_completion_keys = 1                      " (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
+let g:terraform_module_registry_search = 0               " attempt to stop the slow update for deoplete
 
 " --- Syntastic config
 set statusline+=%#warningmsg#                  " recomended defaults
@@ -125,8 +128,15 @@ let g:syntastic_auto_loc_list = 1              " recomended defaults
 let g:syntastic_check_on_open = 1              " recomended defaults
 let g:syntastic_check_on_wq = 0                " recomended defaults
 
+let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": ["python", "terraform"] }  " fix autocompletion inserting first selection
+
 " --- custom file types
 au BufNewFile,BufRead *.tf,*.tfvars
         \ set ft=terraform expandtab
 au BufNewFile,BufRead jenkinsfile,Jenkinsfile
 	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
+au BufNewFile,BufRead *.py
+        \ set tabstop=4 softtabstop=4 set shiftwidth=4 set textwidth=79 set expandtab set autoindent set fileformat=unix
