@@ -139,4 +139,4 @@ au BufNewFile,BufRead *.tf,*.tfvars
 au BufNewFile,BufRead jenkinsfile,Jenkinsfile
 	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
 au BufNewFile,BufRead *.py
-        \ set tabstop=4 softtabstop=4 set shiftwidth=4 set textwidth=79 set expandtab set autoindent set fileformat=unix
+        \ set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
