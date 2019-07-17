@@ -54,6 +54,7 @@ Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
 Plugin 'nvie/vim-flake8'                 " apply pep8 to python
+Plugin 'davidhalter/jedi-vim'            " python autocompletion
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -139,4 +140,4 @@ au BufNewFile,BufRead *.tf,*.tfvars
 au BufNewFile,BufRead jenkinsfile,Jenkinsfile
 	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
 au BufNewFile,BufRead *.py
-        \ set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=79 expandtab autoindent fileformat=unix
+        \ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
