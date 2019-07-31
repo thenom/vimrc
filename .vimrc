@@ -68,8 +68,8 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#omni_patterns = {}                                               " configuration for terraform autocomplete
 call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })         " go configuration
-"call deoplete#custom#option('omni_patterns', { 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
-call deoplete#initialize()                                                      " configuration for terraform autocomplete
+call deoplete#custom#option('omni_patterns', { 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
+"call deoplete#initialize()                                                      " configuration for terraform autocomplete
 
 " --- neosnippet config
 " Plugin key-mappings.
@@ -118,6 +118,8 @@ autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(P
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
 let g:terraform_completion_keys = 1                      " (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
 let g:terraform_module_registry_search = 0               " attempt to stop the slow update for deoplete
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " --- Syntastic config
 set statusline+=%#warningmsg#                  " recomended defaults
@@ -130,14 +132,21 @@ let g:syntastic_check_on_open = 1              " recomended defaults
 let g:syntastic_check_on_wq = 0                " recomended defaults
 
 let g:syntastic_mode_map = {
-        \ "mode": "active",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": ["python", "terraform"] }  " fix autocompletion inserting first selection
+			\ "mode": "active",
+			\ "active_filetypes": [],
+			\ "passive_filetypes": ["python", "terraform"] }  " fix autocompletion inserting first selection
+
+" --- vim-flake8 config
+let g:flake8_show_in_gutter=1
+autocmd BufWritePost *.py call flake8#Flake8()
+
 
 " --- custom file types
 au BufNewFile,BufRead *.tf,*.tfvars
-        \ set ft=terraform expandtab
+			\ set ft=terraform expandtab
 au BufNewFile,BufRead jenkinsfile,Jenkinsfile
-	\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
+			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
 au BufNewFile,BufRead *.py
-        \ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.yml,*.yaml
+			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
