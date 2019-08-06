@@ -29,7 +29,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
 " let Vundle manage Vundle, required
-Plugin 'Vundle/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plugin 'tmhedberg/SimpylFold'		" Fold\collapse your code blocks
@@ -66,10 +66,10 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 
 " --- deoplete config
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#omni_patterns = {}                                               " configuration for terraform autocomplete
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })         " go configuration
-call deoplete#custom#option('omni_patterns', { 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
-"call deoplete#initialize()                                                      " configuration for terraform autocomplete
+let g:deoplete#omni_patterns = {}                                                                              " configuration for terraform autocomplete
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })                                        " go configuration
+call deoplete#custom#option('omni_patterns', { 'complete_method': 'omnifunc', 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
+call deoplete#initialize()                                                                                     " configuration for terraform autocomplete
 
 " --- neosnippet config
 " Plugin key-mappings.
@@ -85,6 +85,8 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 "smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 "			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" Expand on CR
+"imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
 
 " For conceal markers.
 if has('conceal')
@@ -149,4 +151,6 @@ au BufNewFile,BufRead jenkinsfile,Jenkinsfile
 au BufNewFile,BufRead *.py
 			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.yml,*.yaml
+			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.json
 			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
