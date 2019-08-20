@@ -67,8 +67,8 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 " --- deoplete config
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#omni_patterns = {}                                                                              " configuration for terraform autocomplete
+let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
 call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })                                        " go configuration
-call deoplete#custom#option('omni_patterns', { 'complete_method': 'omnifunc', 'terraform': '[^ *\t"{=$]\w*' }) " configuration for terraform autocomplete
 call deoplete#initialize()                                                                                     " configuration for terraform autocomplete
 
 " --- neosnippet config
