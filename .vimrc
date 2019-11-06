@@ -1,5 +1,5 @@
 " General config
-set nu						" turn on line number
+set rnu						" turn on line number
 set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
 filetype plugin indent on                       " enable file type detection
@@ -50,11 +50,15 @@ Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
 
 Plugin 'vim-syntastic/syntastic'  " Syntax checker
 
+Plugin 'tpope/vim-fugitive'   " Git integration
+
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
 Plugin 'nvie/vim-flake8'                 " apply pep8 to python
 Plugin 'davidhalter/jedi-vim'            " python autocompletion
+
+Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -152,5 +156,5 @@ au BufNewFile,BufRead *.py
 			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.yml,*.yaml
 			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.json
-			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
+au BufNewFile,BufRead *.json,*.tpl
+			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
