@@ -32,11 +32,10 @@ call vundle#begin('~/.vim/bundle/')
 Plugin 'VundleVim/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-Plugin 'tmhedberg/SimpylFold'		" Fold\collapse your code blocks
+" Plugin 'tmhedberg/SimpylFold'		" Fold\collapse your code blocks
 Plugin 'scrooloose/nerdtree'		" File manager and browser
 Plugin 'fatih/vim-go'			" Go tools and code completion
 Plugin 'majutsushi/tagbar'		" list file tags
-Plugin 'Shougo/deoplete.nvim'		" Autocompletion
 if !has('nvim')
 	Plugin 'roxma/nvim-yarp'		" deoplete dependancies
 	Plugin 'roxma/vim-hug-neovim-rpc'	" deoplete dependancies
@@ -51,6 +50,7 @@ Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
 Plugin 'vim-syntastic/syntastic'  " Syntax checker
 
 Plugin 'tpope/vim-fugitive'   " Git integration
+Plugin 'tpope/vim-rhubarb'   " Git hub integration
 
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
@@ -62,8 +62,20 @@ Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on    " required
 " ---- End Vundle setup
+"
+" ---- Plug-vim setup (first! curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
+call plug#begin('~/.vim/plugged')
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+call plug#end()
+" ---- Eng plug vim setup
 
 " --- Post vundle config
 filetype plugin indent on			" enable loading the indent file for specific file types
