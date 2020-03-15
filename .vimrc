@@ -11,6 +11,7 @@ set pyxversion=3				" set default python version to use for pyx* commands
 set splitbelow                                  " open horizontal split below
 set splitright                                  " open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
+let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -170,3 +171,5 @@ au BufNewFile,BufRead *.yml,*.yaml
 			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
 au BufNewFile,BufRead *.json,*.tpl
 			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
+au BufNewFile,BufRead *.sh,*.bash
+			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
