@@ -11,17 +11,19 @@ set pyxversion=3				" set default python version to use for pyx* commands
 set splitbelow                                  " open horizontal split below
 set splitright                                  " open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
-let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
-
-" --- split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+set autochdir                                   " chdir to current file
+"let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
+"set shell=/bin/bash                     " set the shell and force new login
 
 " check for python3, if succesful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
+endif
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
 " ---- Vundle setup (first! cd ~/.vim/bundle && git clone https://github.com/VundleVim/Vundle.vim.git)
@@ -61,6 +63,10 @@ Plugin 'davidhalter/jedi-vim'            " python autocompletion
 
 Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
 
+Plugin 'dkprice/vim-easygrep'     " improved grep function
+
+Plugin 'ekalinin/dockerfile.vim'    " dockerfile highlighting
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " ---- End Vundle setup
@@ -85,7 +91,8 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#omni_patterns = {}                                                                              " configuration for terraform autocomplete
 let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })                                        " go configuration
+" call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*', 'complete_method': 'omnifunc', 'terraform': '[^ *\t"{=$]\w*'})
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*', 'complete_method': 'omnifunc'})
 call deoplete#initialize()                                                                                     " configuration for terraform autocomplete
 
 " --- neosnippet config
@@ -119,6 +126,7 @@ set t_Co=256
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  "close vim if nerdtree is the last window
+let NERDTreeShowBookmarks=1
 
 " --- toggle tag bar
 nmap <F8> :TagbarToggle<CR>
@@ -126,13 +134,13 @@ let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew v
 
 " --- vim-terraform config
 let g:terraform_align=1              " indentation syntax for matching files
-let g:terraform_fold_sections=1      " automatically fold (hide until unfolded) sections of terraform code
+let g:terraform_fold_sections=0      " automatically fold (hide until unfolded) sections of terraform code
 let g:terraform_fmt_on_save=1        " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
 let g:terraform_commentstring='//%s' " Override vims comment string
 
 " --- vim-terraform-autocompletion
 let g:syntastic_terraform_tffilter_plan = 1              " (Optional) Enable terraform plan to be include in filter
-set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
+"set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(Preview) window after completions
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
 let g:terraform_completion_keys = 1                      " (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
@@ -159,6 +167,11 @@ let g:syntastic_mode_map = {
 let g:flake8_show_in_gutter=1
 autocmd BufWritePost *.py call flake8#Flake8()
 
+" --- split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " --- custom file types
 au BufNewFile,BufRead *.tf,*.tfvars
