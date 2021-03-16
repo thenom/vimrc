@@ -52,6 +52,8 @@ Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
 
 Plugin 'vim-syntastic/syntastic'  " Syntax checker
 
+Plugin 'xavierchow/vim-swagger-preview'   "  Open swagger api spec in chrome
+
 Plugin 'tpope/vim-fugitive'   " Git integration
 Plugin 'tpope/vim-rhubarb'   " Git hub integration
 
