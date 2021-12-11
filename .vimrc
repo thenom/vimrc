@@ -1,5 +1,5 @@
 " General config
-set rnu						" turn on line number
+set nu rnu					" turn on hybrid line numbers
 set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
 filetype plugin indent on                       " enable file type detection
@@ -68,6 +68,10 @@ Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
 Plugin 'dkprice/vim-easygrep'     " improved grep function
 
 Plugin 'ekalinin/dockerfile.vim'    " dockerfile highlighting
+
+Plugin 'tsandall/vim-rego'      " for Open Policy Agent rego files
+
+Plugin 'Chiel92/vim-autoformat'    " autoformatter
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -174,6 +178,13 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+" --- vim-rego config
+let g:formatdef_rego = '"opa fmt"'
+let g:formatters_rego = ['rego']
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+au BufWritePre *.rego Autoformat
 
 " --- custom file types
 au BufNewFile,BufRead *.tf,*.tfvars
