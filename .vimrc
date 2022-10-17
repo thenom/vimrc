@@ -15,6 +15,9 @@ set autochdir                                   " chdir to current file
 "let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
 "set shell=/bin/bash                     " set the shell and force new login
 
+" set colourscheme
+colorscheme habamax
+
 " check for python3, if succesful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
@@ -25,6 +28,12 @@ endif
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
+
+" Setup folding toggle to F9
+inoremap <F9> <C-O>za
+nnoremap <F9> za
+onoremap <F9> <C-C>za
+vnoremap <F9> zf
 
 " ---- Vundle setup (first! cd ~/.vim/bundle && git clone https://github.com/VundleVim/Vundle.vim.git)
 " set the runtime path to include Vundle and initialize
@@ -39,10 +48,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'		" File manager and browser
 Plugin 'fatih/vim-go'			" Go tools and code completion
 Plugin 'majutsushi/tagbar'		" list file tags
-if !has('nvim')
-	Plugin 'roxma/nvim-yarp'		" deoplete dependancies
-	Plugin 'roxma/vim-hug-neovim-rpc'	" deoplete dependancies
-endif
+
+Plugin 'ycm-core/YouCompleteMe'         "Auto completion
 
 Plugin 'Shougo/neosnippet.vim'		" code snippet tools
 Plugin 'Shougo/neosnippet-snippets'	" code snippets
@@ -61,11 +68,10 @@ Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
 Plugin 'nvie/vim-flake8'                 " apply pep8 to python
-Plugin 'davidhalter/jedi-vim'            " python autocompletion
+"Plugin 'davidhalter/jedi-vim'            " python autocompletion (disabled to
+"test YCM)
 
 Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
-
-Plugin 'dkprice/vim-easygrep'     " improved grep function
 
 Plugin 'ekalinin/dockerfile.vim'    " dockerfile highlighting
 
@@ -76,30 +82,10 @@ Plugin 'Chiel92/vim-autoformat'    " autoformatter
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " ---- End Vundle setup
-"
-" ---- Plug-vim setup (first! curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim)
-call plug#begin('~/.vim/plugged')
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 
-call plug#end()
-" ---- Eng plug vim setup
 
 " --- Post vundle config
 filetype plugin indent on			" enable loading the indent file for specific file types
-
-" --- deoplete config
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#omni_patterns = {}                                                                              " configuration for terraform autocomplete
-let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
-" call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*', 'complete_method': 'omnifunc', 'terraform': '[^ *\t"{=$]\w*'})
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*', 'complete_method': 'omnifunc'})
-call deoplete#initialize()                                                                                     " configuration for terraform autocomplete
 
 " --- neosnippet config
 " Plugin key-mappings.
@@ -172,6 +158,8 @@ let g:syntastic_mode_map = {
 " --- vim-flake8 config
 let g:flake8_show_in_gutter=1
 autocmd BufWritePost *.py call flake8#Flake8()
+let g:syntastic_python_flake8_args='--ignore=E501'
+let g:syntastic_python_flake8_post_args='--ignore=E501,E128,E225'
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
