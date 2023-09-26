@@ -15,9 +15,6 @@ set autochdir                                   " chdir to current file
 "let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
 "set shell=/bin/bash                     " set the shell and force new login
 
-" set colourscheme
-colorscheme habamax
-
 " check for python3, if succesful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
@@ -51,9 +48,6 @@ Plugin 'majutsushi/tagbar'		" list file tags
 
 Plugin 'ycm-core/YouCompleteMe'         "Auto completion
 
-Plugin 'Shougo/neosnippet.vim'		" code snippet tools
-Plugin 'Shougo/neosnippet-snippets'	" code snippets
-
 Plugin 'hashivim/vim-terraform'                " terraform subcommands and filetype setups
 Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
 
@@ -79,35 +73,24 @@ Plugin 'tsandall/vim-rego'      " for Open Policy Agent rego files
 
 Plugin 'Chiel92/vim-autoformat'    " autoformatter
 
+Plugin 'robbles/logstash.vim'
+
+" Colour schemes
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'morhetz/gruvbox'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " ---- End Vundle setup
 
 
+" set colourscheme
+set background=dark
+colorscheme gruvbox
+
 " --- Post vundle config
 filetype plugin indent on			" enable loading the indent file for specific file types
 
-" --- neosnippet config
-" Plugin key-mappings.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"			\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" Expand on CR
-"imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
-
-" For conceal markers.
-if has('conceal')
-	set conceallevel=2 concealcursor=niv
-endif
 
 " --- powerline config
 set rtp+=powerline/bindings/vim/
@@ -158,8 +141,7 @@ let g:syntastic_mode_map = {
 " --- vim-flake8 config
 let g:flake8_show_in_gutter=1
 autocmd BufWritePost *.py call flake8#Flake8()
-let g:syntastic_python_flake8_args='--ignore=E501'
-let g:syntastic_python_flake8_post_args='--ignore=E501,E128,E225'
+let g:syntastic_python_flake8_args='--ignore = F821,E302,E501'
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -187,3 +169,12 @@ au BufNewFile,BufRead *.json,*.tpl
 			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
 au BufNewFile,BufRead *.sh,*.bash
 			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
+
+" --- custom functions
+" format XML
+com! FormatXML :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
+nnoremap = :FormatXML<Cr>
+
+" format JSON - needs jq installed
+com! FormatJSON :%!jq .
+nnoremap = :FormatJSON<Cr>
