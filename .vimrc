@@ -58,14 +58,15 @@ Plugin 'xavierchow/vim-swagger-preview'   "  Open swagger api spec in chrome
 Plugin 'tpope/vim-fugitive'   " Git integration
 Plugin 'tpope/vim-rhubarb'   " Git hub integration
 
-Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'itchyny/lightline.vim'  " lightline status line
 
 Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
 Plugin 'nvie/vim-flake8'                 " apply pep8 to python
-"Plugin 'davidhalter/jedi-vim'            " python autocompletion (disabled to
-"test YCM)
+Plugin 'davidhalter/jedi-vim'            " python autocompletion (disabled to test YCM)
 
 Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
+
+Plugin 'sirver/ultisnips'             " snippets
 
 Plugin 'ekalinin/dockerfile.vim'    " dockerfile highlighting
 
@@ -75,14 +76,29 @@ Plugin 'Chiel92/vim-autoformat'    " autoformatter
 
 Plugin 'robbles/logstash.vim'
 
+Plugin 'vim-test/vim-test'     " https://github.com/vim-test/vim-test
+
+Plugin 'wellle/context.vim'    " to keep things like function names at the top on the window when scrolling
+
 " Colour schemes
-Plugin 'NLKNguyen/papercolor-theme'
+"Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'morhetz/gruvbox'
+
+" Ollama AI
+" Plugin 'gergap/vim-ollama'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " ---- End Vundle setup
 
+
+" --- lightline config
+set laststatus=2
+
+" vim-ollama
+let g:ollama_host = 'http://localhost:11434'
+let g:ollama_chat_model = 'deepseek-r1:8b'
+let g:ollama_model = 'deepseek-coder-v2:latest'
 
 " set colourscheme
 set background=dark
@@ -91,11 +107,13 @@ colorscheme gruvbox
 " --- Post vundle config
 filetype plugin indent on			" enable loading the indent file for specific file types
 
-
-" --- powerline config
-set rtp+=powerline/bindings/vim/
-set laststatus=2
-set t_Co=256
+" --- UltiSnips
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " --- nerdtree config
 map <C-n> :NERDTreeToggle<CR>
@@ -155,6 +173,13 @@ let g:formatters_rego = ['rego']
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 au BufWritePre *.rego Autoformat
+
+" --- vim-test config
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 
 " --- custom file types
 au BufNewFile,BufRead *.tf,*.tfvars
