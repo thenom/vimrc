@@ -8,7 +8,6 @@ set splitright				" open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
 set autochdir				" chdir to current file
 let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
-set hidden					" Allows switching buffers without saving
 set updatetime=300				" Crucial for CoC responsiveness
 set signcolumn=yes				" Always show the signcolumn for diagnostics
 set cmdheight=2					" Give more room for messages and command line
@@ -36,8 +35,6 @@ vnoremap <F9> zf
 call plug#begin()
 
 Plug 'scrooloose/nerdtree'		" File manager and browser
-Plug 'fatih/vim-go'			" Go tools and code completion
-Plug 'majutsushi/tagbar'		" list file tags
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}	" Auto completion via LSP
 
@@ -55,8 +52,6 @@ Plug 'scrooloose/nerdcommenter'		" comment\uncomment blocks
 Plug 'ekalinin/dockerfile.vim'		" dockerfile highlighting
 
 Plug 'tsandall/vim-rego'		" for Open Policy Agent rego files
-
-Plug 'Chiel92/vim-autoformat'		" autoformatter
 
 Plug 'robbles/logstash.vim'
 
@@ -121,6 +116,9 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 " Use <leader>x for convert visual selected code to snippet
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
+" Have CoC format on save
+autocmd BufWritePre *.go,*.py,*.tf,*.json,*.yaml,*.rego :call CocAction('format')
+
 " --- lightline config
 let g:lightline = {
       \ 'colorscheme': 'gotham',
@@ -147,14 +145,9 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  "close vim if nerdtree is the last window
 let NERDTreeShowBookmarks=1
 
-" --- toggle tag bar
-nmap <F8> :TagbarToggle<CR>
-let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'  " fixes brew version of vim
-
 " --- vim-terraform config
 let g:terraform_align=1         " indentation syntax for matching files
 let g:terraform_fold_sections=0       " automatically fold (hide until unfolded) sections of terraform code
-let g:terraform_fmt_on_save=1       " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
 let g:terraform_commentstring='//%s' " Override vims comment string
 
 " --- split navigations
@@ -176,12 +169,3 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
-
-" --- custom functions
-" format XML
-com! FormatXML :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
-nnoremap = :FormatXML<Cr>
-
-" format JSON - needs jq installed
-com! FormatJSON :%!jq .
-nnoremap = :FormatJSON<Cr>
