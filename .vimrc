@@ -4,15 +4,13 @@ set nocompatible				" dont force vi compatibility
 filetype off					" enable file type detection
 filetype plugin indent on                       " enable file type detection
 set encoding=utf-8				" default to utf-8
-syntax on					" enable syntax highlighting
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
 set ruler					" show column and line of current cursor position
 set pyxversion=3				" set default python version to use for pyx* commands
-set splitbelow                                  " open horizontal split below
 set splitright                                  " open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
 set autochdir                                   " chdir to current file
-"let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
+let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
 "set shell=/bin/bash                     " set the shell and force new login
 
 " check for python3, if succesful then python3 will be the loaded version
@@ -32,75 +30,127 @@ nnoremap <F9> za
 onoremap <F9> <C-C>za
 vnoremap <F9> zf
 
-" ---- Vundle setup (first! cd ~/.vim/bundle && git clone https://github.com/VundleVim/Vundle.vim.git)
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/bundle/')
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plug 'scrooloose/nerdtree'		" File manager and browser
+Plug 'fatih/vim-go'			" Go tools and code completion
+Plug 'majutsushi/tagbar'		" list file tags
 
-" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-" Plugin 'tmhedberg/SimpylFold'		" Fold\collapse your code blocks
-Plugin 'scrooloose/nerdtree'		" File manager and browser
-Plugin 'fatih/vim-go'			" Go tools and code completion
-Plugin 'majutsushi/tagbar'		" list file tags
+" Plug 'ycm-core/YouCompleteMe'         "Auto completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}               "trial other autocompletion
 
-Plugin 'ycm-core/YouCompleteMe'         "Auto completion
+Plug 'hashivim/vim-terraform'                " terraform subcommands and filetype setups
+Plug 'juliosueiras/vim-terraform-completion' " terraform autocompletion
 
-Plugin 'hashivim/vim-terraform'                " terraform subcommands and filetype setups
-Plugin 'juliosueiras/vim-terraform-completion' " terraform autocompletion
+Plug 'vim-syntastic/syntastic'  " Syntax checker
 
-Plugin 'vim-syntastic/syntastic'  " Syntax checker
+Plug 'xavierchow/vim-swagger-preview'   "  Open swagger api spec in chrome
 
-Plugin 'xavierchow/vim-swagger-preview'   "  Open swagger api spec in chrome
+Plug 'tpope/vim-fugitive'   " Git integration
+Plug 'tpope/vim-rhubarb'   " Git hub integration
 
-Plugin 'tpope/vim-fugitive'   " Git integration
-Plugin 'tpope/vim-rhubarb'   " Git hub integration
+Plug 'itchyny/lightline.vim'  " lightline status line
 
-Plugin 'itchyny/lightline.vim'  " lightline status line
+Plug 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
+Plug 'nvie/vim-flake8'                 " apply pep8 to python
+Plug 'davidhalter/jedi-vim'            " python autocompletion (disabled to test YCM)
 
-Plugin 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
-Plugin 'nvie/vim-flake8'                 " apply pep8 to python
-Plugin 'davidhalter/jedi-vim'            " python autocompletion (disabled to test YCM)
+Plug 'scrooloose/nerdcommenter'        " comment\uncomment blocks
 
-Plugin 'scrooloose/nerdcommenter'        " comment\uncomment blocks
+Plug 'sirver/ultisnips'             " snippets
+Plug 'honza/vim-snippets'          " snippets library
 
-Plugin 'sirver/ultisnips'             " snippets
+Plug 'ekalinin/dockerfile.vim'    " dockerfile highlighting
 
-Plugin 'ekalinin/dockerfile.vim'    " dockerfile highlighting
+Plug 'tsandall/vim-rego'      " for Open Policy Agent rego files
 
-Plugin 'tsandall/vim-rego'      " for Open Policy Agent rego files
+Plug 'Chiel92/vim-autoformat'    " autoformatter
 
-Plugin 'Chiel92/vim-autoformat'    " autoformatter
+Plug 'robbles/logstash.vim'
 
-Plugin 'robbles/logstash.vim'
+Plug 'vim-test/vim-test'     " https://github.com/vim-test/vim-test
 
-Plugin 'vim-test/vim-test'     " https://github.com/vim-test/vim-test
-
-Plugin 'wellle/context.vim'    " to keep things like function names at the top on the window when scrolling
+Plug 'wellle/context.vim'    " to keep things like function names at the top on the window when scrolling
 
 " Colour schemes
-"Plugin 'NLKNguyen/papercolor-theme'
-Plugin 'morhetz/gruvbox'
+"Plug 'NLKNguyen/papercolor-theme'
+Plug 'morhetz/gruvbox'
 
 " Ollama AI
-" Plugin 'gergap/vim-ollama'
+" Plug 'gergap/vim-ollama'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
-" ---- End Vundle setup
+call plug#end()
 
+
+" --- coc config
+" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+" delays and poor user experience
+set updatetime=300
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved
+set signcolumn=yes
+" Use tab for trigger completion with characters ahead and navigate
+" NOTE: There's always complete item selected by default, you may want to enable
+" no select by `"suggest.noselect": true` in your configuration file
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
 
 " --- lightline config
 set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'inactive': {
+      \   'left': [ [ 'filename', 'modified' ] ],
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
 
-" vim-ollama
+" --- vim-ollama
 let g:ollama_host = 'http://localhost:11434'
 let g:ollama_chat_model = 'deepseek-r1:8b'
 let g:ollama_model = 'deepseek-coder-v2:latest'
 
-" set colourscheme
+" --- set colourscheme
 set background=dark
 colorscheme gruvbox
 
@@ -112,8 +162,8 @@ filetype plugin indent on			" enable loading the indent file for specific file t
 " - https://github.com/Valloric/YouCompleteMe
 " - https://github.com/nvim-lua/completion-nvim
 let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " --- nerdtree config
 map <C-n> :NERDTreeToggle<CR>
