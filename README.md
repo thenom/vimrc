@@ -111,7 +111,7 @@ You should see a status window showing the progress. Once complete, close the st
 `coc.nvim` requires specific extensions for language support. After `:PlugInstall` is done, **stay in Vim** and run these commands:
 
 ```vim
-:CocInstall coc-python coc-go coc-json coc-yaml coc-snippets
+:CocInstall coc-pyright coc-go coc-json coc-yaml coc-snippets
 ```
 
 This will install the extensions providing LSP features for Python, Go, JSON, YAML, and general snippet functionality.
