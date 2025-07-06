@@ -1,19 +1,22 @@
 " General config
 set nu rnu					" turn on hybrid line numbers
 set nocompatible				" dont force vi compatibility
-filetype off					" enable file type detection
-filetype plugin indent on                       " enable file type detection
 set encoding=utf-8				" default to utf-8
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
 set ruler					" show column and line of current cursor position
-set pyxversion=3				" set default python version to use for pyx* commands
-set splitright                                  " open vertical split on the right
+set splitright				" open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
-set autochdir                                   " chdir to current file
+set autochdir				" chdir to current file
 let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
-"set shell=/bin/bash                     " set the shell and force new login
+set hidden					" Allows switching buffers without saving
+set updatetime=300				" Crucial for CoC responsiveness
+set signcolumn=yes				" Always show the signcolumn for diagnostics
+set cmdheight=2					" Give more room for messages and command line
+set shortmess+=c				" Reduce some common messages
+set scrolloff=8					" Keep 8 lines of context around cursor when scrolling
+set completeopt=menuone,noinsert,noselect	" Completion menu options for CoC
 
-" check for python3, if succesful then python3 will be the loaded version
+" check for python3, if successful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
 endif
@@ -36,45 +39,33 @@ Plug 'scrooloose/nerdtree'		" File manager and browser
 Plug 'fatih/vim-go'			" Go tools and code completion
 Plug 'majutsushi/tagbar'		" list file tags
 
-" Plug 'ycm-core/YouCompleteMe'         "Auto completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}               "trial other autocompletion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}	" Auto completion via LSP
 
-Plug 'hashivim/vim-terraform'                " terraform subcommands and filetype setups
-Plug 'juliosueiras/vim-terraform-completion' " terraform autocompletion
+Plug 'hashivim/vim-terraform'		" terraform subcommands and filetype setups
 
-Plug 'vim-syntastic/syntastic'  " Syntax checker
+Plug 'xavierchow/vim-swagger-preview'	" Open swagger api spec in chrome
 
-Plug 'xavierchow/vim-swagger-preview'   "  Open swagger api spec in chrome
+Plug 'tpope/vim-fugitive'		" Git integration
+Plug 'tpope/vim-rhubarb'		" Git hub integration
 
-Plug 'tpope/vim-fugitive'   " Git integration
-Plug 'tpope/vim-rhubarb'   " Git hub integration
+Plug 'itchyny/lightline.vim'		" lightline status line
 
-Plug 'itchyny/lightline.vim'  " lightline status line
+Plug 'scrooloose/nerdcommenter'		" comment\uncomment blocks
 
-Plug 'vim-scripts/indentpython.vim'    " ermmm, python indenting?
-Plug 'nvie/vim-flake8'                 " apply pep8 to python
-Plug 'davidhalter/jedi-vim'            " python autocompletion (disabled to test YCM)
+Plug 'ekalinin/dockerfile.vim'		" dockerfile highlighting
 
-Plug 'scrooloose/nerdcommenter'        " comment\uncomment blocks
+Plug 'tsandall/vim-rego'		" for Open Policy Agent rego files
 
-Plug 'sirver/ultisnips'             " snippets
-Plug 'honza/vim-snippets'          " snippets library
-
-Plug 'ekalinin/dockerfile.vim'    " dockerfile highlighting
-
-Plug 'tsandall/vim-rego'      " for Open Policy Agent rego files
-
-Plug 'Chiel92/vim-autoformat'    " autoformatter
+Plug 'Chiel92/vim-autoformat'		" autoformatter
 
 Plug 'robbles/logstash.vim'
 
-Plug 'vim-test/vim-test'     " https://github.com/vim-test/vim-test
+Plug 'vim-test/vim-test'		" https://github.com/vim-test/vim-test
 
-Plug 'wellle/context.vim'    " to keep things like function names at the top on the window when scrolling
+Plug 'wellle/context.vim'		" to keep things like function names at the top on the window when scrolling
 
 " Colour schemes
-"Plug 'NLKNguyen/papercolor-theme'
-Plug 'morhetz/gruvbox'
+Plug 'whatyouhide/vim-gotham'
 
 " Ollama AI
 " Plug 'gergap/vim-ollama'
@@ -82,14 +73,15 @@ Plug 'morhetz/gruvbox'
 " All of your Plugins must be added before the following line
 call plug#end()
 
+" --- Post plugin config
+filetype plugin indent on		" enable loading the indent file for specific file types
+
+" --- set colourscheme
+set termguicolors			" Enable true color support
+set background=dark
+colorscheme gotham
 
 " --- coc config
-" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
-" delays and poor user experience
-set updatetime=300
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved
-set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
 " no select by `"suggest.noselect": true` in your configuration file
@@ -104,7 +96,7 @@ inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+      \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! CheckBackspace() abort
   let col = col('.') - 1
@@ -130,9 +122,8 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
 " --- lightline config
-set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'gotham',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -150,21 +141,6 @@ let g:ollama_host = 'http://localhost:11434'
 let g:ollama_chat_model = 'deepseek-r1:8b'
 let g:ollama_model = 'deepseek-coder-v2:latest'
 
-" --- set colourscheme
-set background=dark
-colorscheme gruvbox
-
-" --- Post vundle config
-filetype plugin indent on			" enable loading the indent file for specific file types
-
-" --- UltiSnips
-" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
-" - https://github.com/Valloric/YouCompleteMe
-" - https://github.com/nvim-lua/completion-nvim
-let g:UltiSnipsExpandTrigger="<c-j>"
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
 " --- nerdtree config
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
@@ -173,43 +149,13 @@ let NERDTreeShowBookmarks=1
 
 " --- toggle tag bar
 nmap <F8> :TagbarToggle<CR>
-let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'   " fixes brew version of vim
+let g:Tlist_Ctags_Cmd='/usr/local/Cellar/ctags/5.8_1/bin/ctags'  " fixes brew version of vim
 
 " --- vim-terraform config
-let g:terraform_align=1              " indentation syntax for matching files
-let g:terraform_fold_sections=0      " automatically fold (hide until unfolded) sections of terraform code
-let g:terraform_fmt_on_save=1        " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
+let g:terraform_align=1         " indentation syntax for matching files
+let g:terraform_fold_sections=0       " automatically fold (hide until unfolded) sections of terraform code
+let g:terraform_fmt_on_save=1       " Allow vim-terraform to automatically format *.tf and *.tfvars files with terraform fmt
 let g:terraform_commentstring='//%s' " Override vims comment string
-
-" --- vim-terraform-autocompletion
-let g:syntastic_terraform_tffilter_plan = 1              " (Optional) Enable terraform plan to be include in filter
-"set completeopt-=preview                                 " (Optional)Remove Info(Preview) window
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif " (Optional)Hide Info(Preview) window after completions
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif  " (Optional)Hide Info(Preview) window after completions
-let g:terraform_completion_keys = 1                      " (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
-let g:terraform_module_registry_search = 0               " attempt to stop the slow update for deoplete
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-
-" --- Syntastic config
-set statusline+=%#warningmsg#                  " recomended defaults
-set statusline+=%{SyntasticStatuslineFlag()}   " recomended defaults
-set statusline+=%*   " recomended defaults
-
-let g:syntastic_always_populate_loc_list = 1   " recomended defaults
-let g:syntastic_auto_loc_list = 1              " recomended defaults
-let g:syntastic_check_on_open = 1              " recomended defaults
-let g:syntastic_check_on_wq = 0                " recomended defaults
-
-let g:syntastic_mode_map = {
-			\ "mode": "active",
-			\ "active_filetypes": [],
-			\ "passive_filetypes": ["python", "terraform"] }  " fix autocompletion inserting first selection
-
-" --- vim-flake8 config
-let g:flake8_show_in_gutter=1
-autocmd BufWritePost *.py call flake8#Flake8()
-let g:syntastic_python_flake8_args='--ignore = F821,E302,E501'
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -230,20 +176,6 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
-
-" --- custom file types
-au BufNewFile,BufRead *.tf,*.tfvars
-			\ set ft=terraform expandtab
-au BufNewFile,BufRead jenkinsfile,Jenkinsfile
-			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix ft=groovy
-au BufNewFile,BufRead *.py
-			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.yml,*.yaml
-			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix
-au BufNewFile,BufRead *.json,*.tpl
-			\ set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent fileformat=unix ft=json
-au BufNewFile,BufRead *.sh,*.bash
-			\ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
 
 " --- custom functions
 " format XML
