@@ -1,0 +1,164 @@
+{
+  // General Coc settings
+  "suggest.autoTrigger": "always", // Always trigger completion (default)
+  "suggest.noselect": false,       // Select first item by default (matches your completeopt)
+  "diagnostic.displayByModes": {
+    "insert": "virtualText",
+    "normal": "sign"
+  },
+  "diagnostic.virtualText": true, // Show diagnostics inline
+  "diagnostic.virtualTextCurrentLineOnly": false, // Show for all lines, not just current
+  "diagnostic.virtualTextPrefix": "  ", // Prefix for virtual text diagnostics
+  "diagnostic.checkCurrentLine": true,  // Check for diagnostics on current line as you type
+  "workspace.workspaceFolderCheckCwd": true, // Automatically detect workspace folder from cwd
+
+  // Automatic Language Server Installation (via npm)
+  // This will prompt you to install language servers if they are not found.
+  // Set to true to automatically download them without a prompt.
+  "html.autoDownload": true,
+  "css.autoDownload": true,
+  "json.autoDownload": true,
+  "yaml.autoDownload": true,
+  "javascript.autoDownload": true,
+  "typescript.autoDownload": true,
+
+  // Language Server Configurations (for languages where a dedicated coc-extension provides it)
+  "languageserver": {
+    // Python (assuming you install coc-python)
+    "python": {
+      "command": "python3", // Default, CoC will often find it. Set explicitly if issues.
+      "args": ["-m", "pylsp"], // Using Python Language Server (pylsp)
+      "filetypes": ["python"],
+      "settings": {
+        "python": {
+          "analysis": {
+            "autoImportCompletions": true,
+            "diagnosticMode": "openFilesOnly", // Only analyze open files for performance
+            "typeCheckingMode": "basic" // "basic" or "strict"
+          },
+          "formatting": {
+            "provider": "black" // You'll need `pip install black`
+          },
+          "linting": {
+            "flake8": {
+              "enabled": true,
+              "args": ["--ignore=F821,E302,E501"] // Your existing flake8 ignores
+            },
+            "pylint": {
+              "enabled": false // Example: disable pylint if you prefer flake8
+            }
+          },
+          "venvPath": "~/.virtualenvs", // Example: Path to your virtualenvs if you use one global place
+          "poetryPath": "~/.poetry/bin/poetry", // Example: If you use Poetry
+          "pythonPath": "" // Leave empty for auto-detection or set to specific interpreter: "/usr/bin/python3" or "/path/to/your/venv/bin/python"
+        }
+      }
+    },
+    // Go (assuming you install coc-go which uses gopls)
+    "go": {
+      "command": "gopls",
+      "args": [],
+      "filetypes": ["go"],
+      "rootPatterns": ["go.mod", ".git/", ".golangci.yml"],
+      "trace.server": "off",
+      "settings": {
+        "gopls": {
+          "buildFlags": [],
+          "completeUnimported": true, // Show completions for unimported packages
+          "staticcheck": true,        // Enable static analysis
+          "formatting.local": "",     // Empty uses gofmt, can specify "goimports" etc.
+          "codelenses": {
+            "test": true,
+            "tidy": true
+          },
+          "linksInHover": true,
+          "checkModules": true
+        }
+      }
+    },
+    "terraform": {
+      "command": "terraform-ls", // No full path needed if it's in your PATH
+      "args": ["serve"], // HashiCorp's terraform-ls usually expects "serve" argument
+      "filetypes": ["terraform", "tf"],
+      "initializationOptions": {
+         // Optional: You might find experimental features here from HashiCorp's LS
+         // e.g., "enableCodelen": true
+      },
+      "trace.server": "off"
+    }
+  },
+
+  // Extension-Specific Configurations (these are typically handled by the extensions themselves)
+  // You won't usually need "autoDownload" for these, as :CocInstall handles them.
+
+  // coc-json
+  "json.format.enable": true, // Enable JSON formatting
+  "json.format.keepLines": false,
+  "json.validate.enable": true, // Enable JSON schema validation
+  "json.schemas": [
+    // Example: Add schema for package.json
+    {
+      "fileMatch": ["package.json"],
+      "url": "https://json.schemastore.org/package.json"
+    },
+    // Example: Add schema for your Terraform CI config (if it's JSON)
+    // {
+    //   "fileMatch": ["*.ci.json"],
+    //   "url": "https://example.com/schemas/ci-config.json"
+    // }
+  ],
+
+  // coc-yaml
+  "yaml.format.enable": true, // Enable YAML formatting
+  "yaml.validate": true,      // Enable YAML validation
+  "yaml.schemaStore.enable": true, // Use public schema store for common YAML files
+  "yaml.schemas": {
+    // Example: Kubernetes YAML schema
+    // "kubernetes": "/*.yaml",
+    // Example: Docker Compose schema
+    // "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": ["docker-compose.yml", "docker-compose.*.yml"],
+    // Example: GitHub Actions Workflow schema
+    // "https://json.schemastore.org/github-workflow.json": [".github/workflows/*.yml"],
+    // Your custom Rego policy config (if it's YAML, and you have a schema)
+    // "file://path/to/your/rego_schema.json": ["*.rego.yml"]
+  },
+
+  // coc-snippets (often works well with default settings)
+  // The keybindings are in your vimrc, so no need for explicit coc-settings.json here
+  "snippets.autoTrigger": true, // Enable auto-trigger for snippets
+  "snippets.ultisnips.enable": false, // Disable UltiSnips integration if you're fully moving to CoC's native snippets
+
+  // Other general Coc settings you might consider (based on common preferences)
+  "hover.target": "preview", // Show hover documentation in the preview window (alternative: "float" for floating window)
+  "hover.float.width": 80,   // Max width for floating hover window
+  "codeLens.enable": true,   // Enable Code Lens (e.g., test runners in Go)
+  "signature.enable": true,  // Show function signature help
+  "suggest.completionItemKindLabels": {
+    "function": "ƒ",
+    "method": "m",
+    "variable": "𝒱",
+    "field": "⨀",
+    "class": "𝓒",
+    "interface": "𝐼",
+    "struct": "𝓢",
+    "enum": "ε",
+    "enumMember": "•",
+    "keyword": "κ",
+    "property": "ρ",
+    "value": "ν",
+    "event": "e",
+    "operator": "π",
+    "module": "𝓜",
+    "constant": "C",
+    "constructor": "ctor",
+    "text": "t",
+    "file": "f",
+    "folder": "𝐹",
+    "color": "🎨",
+    "unit": "μ",
+    "snippet": "𝑺",
+    "typeParameter": "𝑇",
+    "reference": "ℛ"
+  },
+  "highlight.documentSymbol": true // Highlight occurrences of the symbol under cursor
+}
