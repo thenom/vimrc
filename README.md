@@ -1,6 +1,6 @@
 # My Vim Configuration (Dotfiles)
 
-This repository contains my personal Vim (`.vimrc`) and CoC (`coc-settings.json`) configurations. This setup aims to provide a modern, IDE-like experience in Vim, primarily powered by `coc.nvim` for Language Server Protocol (LSP) features, completion, and diagnostics.
+This repository contains my personal Vim (`.vimrc`) and CoC (`coc-settings.json`) configurations for Fedora. This setup aims to provide a modern, IDE-like experience in Vim, primarily powered by `coc.nvim` for Language Server Protocol (LSP) features, completion, and diagnostics.
 
 -----
 
@@ -137,13 +137,8 @@ Some language servers and tools need to be installed separately on your system.
   * **Terraform Language Server (`terraform-ls`):**
     Ensure the official `hashicorp/terraform-ls` is installed and in your system's `PATH`.
 
-      * **Via `go install` (if you have Go):**
-        ```bash
-        go install github.com/hashicorp/terraform-ls@latest
-        ```
-      * **Via Package Manager (e.g., RPM for Linux):**
-        Use your distribution's package manager if `terraform-ls` is available. (Example for Fedora/RHEL):
-        ```bash
-        sudo dnf install terraform-ls
-        ```
-      * **Manual Download:** Download the binary from the [official releases page](https://github.com/hashicorp/terraform-ls/releases) and place it in a directory that's in your `$PATH` (e.g., `/usr/local/bin`).
+    Use your distribution's package manager if `terraform-ls` is available. (Example for Fedora/RHEL):
+    ```bash
+    wget -O- https://rpm.releases.hashicorp.com/fedora/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
+    sudo dnf install terraform-ls
+    ```
