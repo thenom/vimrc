@@ -116,6 +116,27 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 " Use <leader>x for convert visual selected code to snippet
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
+" --- CoC Navigation Mappings ---
+
+" Use 'gd' to jump to the definition of the word under the cursor.
+nmap <silent> gd <Plug>(coc-definition)
+
+" Use 'gy' to jump to the type definition.
+nmap <silent> gy <Plug>(coc-type-definition)
+
+" Use 'gi' to jump to the implementation.
+nmap <silent> gi <Plug>(coc-implementation)
+
+" Use 'gr' to show all references of the word under the cursor.
+nmap <silent> gr <Plug>(coc-references)
+
+" Use '[g' and ']g' to navigate diagnostics (errors/warnings).
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Use <leader>rn to rename a symbol across all files.
+nmap <leader>rn <Plug>(coc-rename)
+
 " Have CoC format on save
 autocmd BufWritePre *.go,*.py,*.tf,*.json,*.yaml,*.rego :call CocAction('format')
 
