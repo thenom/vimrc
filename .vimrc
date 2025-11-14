@@ -4,9 +4,9 @@ set nocompatible				" dont force vi compatibility
 set encoding=utf-8				" default to utf-8
 set pastetoggle=<F2>				" use F2 to toggle code block pasting
 set ruler					" show column and line of current cursor position
-set splitright				" open vertical split on the right
+set splitright			        	" open vertical split on the right
 set backspace=indent,eol,start			" sets backspace to delete indents, back to the previous line and past the start of insert mode
-set autochdir				" chdir to current file
+set autochdir				        " chdir to current file
 let $BASH_ENV="~/.vimbash"			" Tells vim to use this file as a bash profile
 set updatetime=300				" Crucial for CoC responsiveness
 set signcolumn=yes				" Always show the signcolumn for diagnostics
@@ -14,11 +14,16 @@ set cmdheight=2					" Give more room for messages and command line
 set shortmess+=c				" Reduce some common messages
 set scrolloff=8					" Keep 8 lines of context around cursor when scrolling
 set completeopt=menuone,noinsert,noselect	" Completion menu options for CoC
+set autoread                                    " Read changes on disk automatically IF the file buffer has not been changed
+set term=$TERM                                  " set the default terminal
 
 " check for python3, if successful then python3 will be the loaded version
 if !has('python3')
 	echo "Warning! has('python3') failed its check!"
 endif
+
+" custom command aliases
+command Qchat vert term sh -c "echo \"Use CTRL-\\ CTRL-N to enter normal mode!\"; q"    " Load q in a vertical split terminal
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -38,7 +43,7 @@ Plug 'scrooloose/nerdtree'		" File manager and browser
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}	" Auto completion via LSP
 
-Plug 'hashivim/vim-terraform'		" terraform subcommands and filetype setups
+Plug 'fatih/vim-go'			" Go tools and code completion
 
 Plug 'xavierchow/vim-swagger-preview'	" Open swagger api spec in chrome
 
@@ -57,7 +62,7 @@ Plug 'robbles/logstash.vim'
 
 Plug 'vim-test/vim-test'		" https://github.com/vim-test/vim-test
 
-Plug 'wellle/context.vim'		" to keep things like function names at the top on the window when scrolling
+"Plug 'wellle/context.vim'		" to keep things like function names at the top on the window when scrolling
 
 " Colour schemes
 Plug 'whatyouhide/vim-gotham'
@@ -74,7 +79,11 @@ filetype plugin indent on		" enable loading the indent file for specific file ty
 " --- set colourscheme
 set termguicolors			" Enable true color support
 set background=dark
-colorscheme gotham
+colorscheme gotham256
+
+" --- vim-go config
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 
 " --- coc config
 " Use tab for trigger completion with characters ahead and navigate
@@ -116,39 +125,53 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 " Use <leader>x for convert visual selected code to snippet
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
-" --- CoC Navigation Mappings ---
-
-" Use 'gd' to jump to the definition of the word under the cursor.
-nmap <silent> gd <Plug>(coc-definition)
-
-" Use 'gy' to jump to the type definition.
-nmap <silent> gy <Plug>(coc-type-definition)
-
-" Use 'gi' to jump to the implementation.
-nmap <silent> gi <Plug>(coc-implementation)
-
-" Use 'gr' to show all references of the word under the cursor.
-nmap <silent> gr <Plug>(coc-references)
-
-" Use '[g' and ']g' to navigate diagnostics (errors/warnings).
+" Use [g and ]g to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-" Use <leader>rn to rename a symbol across all files.
-nmap <leader>rn <Plug>(coc-rename)
+" Use K to show documentation in a floating window
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocAction('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Applying code actions to the selected code block
+" Example: `<leader>aap` for current paragraph
+xmap <leader>g  <Plug>(coc-codeaction-selected)
+nmap <leader>g  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying code actions at the cursor position
+nmap <leader>gc  <Plug>(coc-codeaction-cursor)
+" Remap keys for apply code actions affect whole buffer
+nmap <leader>gs  <Plug>(coc-codeaction-source)
+" Apply the most preferred quickfix action to fix diagnostic on the current line
+nmap <leader>gf  <Plug>(coc-fix-current)
+
+" Remap keys for applying refactor code actions
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+
+" Run the Code Lens action on the current line
+nmap <leader>ga  <Plug>(coc-codelens-action)
 
 " Have CoC format on save
-autocmd BufWritePre *.go,*.py,*.tf,*.json,*.yaml,*.rego :call CocAction('format')
+autocmd BufWritePre *.go,*.py,*.tf,*.json,*.yaml :call CocAction('format')
 
 " --- lightline config
 let g:lightline = {
-      \ 'colorscheme': 'gotham',
+      \ 'colorscheme': 'gotham256',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \           [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
       \ 'inactive': {
-      \   'left': [ [ 'filename', 'modified' ] ],
+      \   'left': [ [ 'relativepath', 'modified' ] ],
       \ },
       \ 'component_function': {
       \   'gitbranch': 'FugitiveHead'
@@ -165,11 +188,6 @@ map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif  "close vim if nerdtree is the last window
 let NERDTreeShowBookmarks=1
-
-" --- vim-terraform config
-let g:terraform_align=1         " indentation syntax for matching files
-let g:terraform_fold_sections=0       " automatically fold (hide until unfolded) sections of terraform code
-let g:terraform_commentstring='//%s' " Override vims comment string
 
 " --- split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -189,4 +207,4 @@ nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
-nmap <silent> <leader>g :TestVisit<CR>
+au FileType go let g:test#project_root = function('getcwd')
