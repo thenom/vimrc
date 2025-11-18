@@ -23,7 +23,7 @@ if !has('python3')
 endif
 
 " custom command aliases
-command Qchat vert term sh -c "echo \"Use CTRL-\\ CTRL-N to enter normal mode!\"; q"    " Load q in a vertical split terminal
+command Qchat vert term sh -c "echo \"Use CTRL-\\ CTRL-N to enter normal mode!\"; GIT_ROOT=$(git rev-parse --show-toplevel); if [ $? -eq 0 ]; then cd $GIT_ROOT; fi; q"    " Load q in a vertical split terminal
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
